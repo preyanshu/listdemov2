@@ -185,26 +185,46 @@ const BlockList = () => {
   };
 
   return (
-    <Center height="100vh" width="100vw" flexDirection={"column"}>
-      <HStack spacing={4} width={{ base: '90vw', md: '70vw' }} mb={3} justifyContent={"flex-end"}>
-        <Text>Fetch interval:</Text>
-        <Menu>
-          <MenuButton as={Button} rightIcon={<ChevronDownIcon />} isDisabled={loading}>
-            {fetchInterval / 1000}s
-          </MenuButton>
-          <MenuList bg="#2D2E30">
-            {[2000, 3000, 5000].map((interval) => (
-              <MenuItem key={interval} onClick={() => handleFetchIntervalChange(interval)}  bg="#2D2E30"  _hover={{ bg: '#212226' }}>
-                {interval / 1000}s
-              </MenuItem>
-            ))}
-          </MenuList>
-        </Menu>
+    <Center height="100vh" width="100vw" flexDirection={"column"} p={6}>
+      
+      <HStack 
+      spacing={4} 
+      width={{ base: '90vw', md: '70vw' }} 
+      my={3} 
+      justifyContent={{ base: "center", md: "flex-end" }} 
+      wrap="wrap-reverse"
+      >
+  <Text>Fetch interval:</Text>
+  <Menu>
+    <MenuButton as={Button} rightIcon={<ChevronDownIcon />} isDisabled={loading}>
+      {fetchInterval / 1000}s
+    </MenuButton>
+    <MenuList bg="#2D2E30">
+      {[2000, 3000, 5000].map((interval) => (
+        <MenuItem 
+          key={interval} 
+          onClick={() => handleFetchIntervalChange(interval)} 
+          bg="#2D2E30" 
+          _hover={{ bg: '#212226' }}
+        >
+          {interval / 1000}s
+        </MenuItem>
+      ))}
+    </MenuList>
+  </Menu>
 
-        <Button mr={3} onClick={refetchBlocks} isDisabled={loading}>
-          Refetch <FaSync size={16} style={{ marginLeft: '12px' }} color='gray.400' />
-        </Button>
-      </HStack>
+  <Button 
+    mr={3} 
+    onClick={refetchBlocks} 
+    isDisabled={loading} 
+    leftIcon={<FaSync size={16} color='gray.400' />}
+  >
+    Refetch
+  </Button>
+</HStack>
+
+    
+      
 
       <Card
         width={{ base: '90vw', md: '70vw' }}
@@ -279,7 +299,7 @@ const BlockList = () => {
         </TableContainer>
 
         <Box overflowX={"auto"} pb={1}>
-          <Box mt={6} display="flex" justifyContent="flex-end" alignItems="center" paddingX={4} minWidth={"500px"}>
+          <Box mt={6} display="flex" justifyContent="flex-end" alignItems="center" paddingX={4} minWidth={"600px"}>
             <HStack spacing={4} alignItems="center" mr={5}>
               <Text>Rows per page:</Text>
               <Menu>
