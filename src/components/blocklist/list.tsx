@@ -28,27 +28,10 @@ import { HiOutlineArrowLeft, HiOutlineArrowRight, HiOutlineClipboardCopy } from 
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
 import { FaSync } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
-// Types
-type Proposer = {
-  operatorAddress: string;
-  avatar: string;
-  moniker: string;
-};
+import { BlockListType,Block} from '@/types/blocklist';
 
-type Block = {
-  height: number;
-  hash: string;
-  timestamp: string; 
-  transCount: number;
-  proposer: Proposer;
-  txs: number;
-};
-
-type ApiResponse = {
-  data: Block[];
-  next_cursor: string;
-};
 
 const toBase64 = (num: number) => Buffer.from(num.toString()).toString('base64');
 
@@ -65,13 +48,15 @@ const BlockList = () => {
   const startIndex = (currentPage - 1) * rowsPerPage;
   const displayedBlocks = blocks.slice(startIndex, startIndex + rowsPerPage);
 
+  const router = useRouter();
+
 
   const refetchBlocks = async () => {
     try {
       setLoading(true);
       const url = `https://andromeda.api.explorers.guru/api/v1/blocks?limit=${rowsPerPage}`;
       const res = await fetch(url);
-      const data: ApiResponse = await res.json();
+      const data: BlockListType = await res.json();
 
       setBlocks(data.data);
       const newCursor = toBase64(data.data[data.data.length - 1].height);
@@ -91,7 +76,7 @@ const BlockList = () => {
 
       const url = `https://andromeda.api.explorers.guru/api/v1/blocks?limit=${rowsPerPage}&cursor=${endPageCursor || ''}`;
       const res = await fetch(url);
-      const data: ApiResponse = await res.json();
+      const data: BlockListType = await res.json();
 
       setBlocks((prev) => [...prev, ...data.data]);
 
@@ -114,7 +99,7 @@ const BlockList = () => {
       if (!nextCursor) return;
 
       const res = await fetch(`https://andromeda.api.explorers.guru/api/v1/blocks?limit=1&cursor=${nextCursor}&order_by=asc`);
-      const data: ApiResponse = await res.json();
+      const data: BlockListType = await res.json();
 
       if (data.data.length > 0) {
         const newBlock = data.data[0];
@@ -277,7 +262,9 @@ const BlockList = () => {
               <Box my={4}></Box>
               <Tbody>
                 {displayedBlocks.map((block, index) => (
-                  <Tr key={block.timestamp} bg={index % 2 === 0 ? '#212226' : 'transparent'} borderBottom="none">
+                  <Tr key={block.timestamp} bg={index % 2 === 0 ? '#212226' : 'transparent'} borderBottom="none" onClick={()=>{
+                    router.push(`/block/${block.height}`)
+                  }} cursor={"pointer"}>
                     <Td color="blue.300">{block.height}</Td>
                     <Td>
                       {/* Display hash with copy functionality */}
